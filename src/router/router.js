@@ -17,6 +17,21 @@ const routes = [
         name: "Register",
         component:  () => import('../components/Register.vue'),
     },
+    {
+        path: "/home",
+        name: "Home",
+        component:  () => import('../components/Home.vue'),
+    },
+    {
+        path: "/menu",
+        name: "Menu",
+        component:  () => import('../components/Menu.vue'),
+    },
+    {
+        path: "/test",
+        name: "Test",
+        component:  () => import('../components/t.vue'),
+    },
 ];
 
 // 导出路由

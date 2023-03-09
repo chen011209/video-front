@@ -1,22 +1,32 @@
 <script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import Login from './components/Login.vue'
+import Menu from "./components/Menu.vue";
 </script>
 
 <template>
-  <div class="flex items-center justify-center h-full ">
+  <div class="common-layout">
+    <el-container>
+      <el-header><Menu></Menu></el-header>
+      <el-main>
+        <router-view v-slot="{ Component }">
+          <transition name="fade">
+            <keep-alive>
+              <component :is="Component" />
+            </keep-alive>
+          </transition> </router-view
+      ></el-main>
+      <!-- <el-footer>Footer</el-footer> -->
+    </el-container>
+  </div>
+
+  <!-- <div class="flex items-center justify-center h-full">
     <router-view v-slot="{ Component }">
-      <transition name="fade" >
+      <transition name="fade">
         <keep-alive>
-          <component :is="Component"/>
+          <component :is="Component" />
         </keep-alive>
       </transition>
     </router-view>
-    <!--    <Login/>-->
-  </div>
+  </div> -->
 </template>
 
-<style>
-
-</style>
+<style></style>
