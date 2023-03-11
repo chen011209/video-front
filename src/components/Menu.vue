@@ -10,7 +10,7 @@
     :ellipsis="true"
     @select="handleSelect"
   >
-    <el-menu-item index="/login" style="font-size: larger; color: #409eff"
+    <el-menu-item index="/home" style="font-size: larger; color: #409eff"
       >首页</el-menu-item
     >
     <el-menu-item index="/movtype/4">动漫</el-menu-item>
@@ -27,6 +27,7 @@
         :suffix-icon="Search"
       />
     </div>
+
     <el-menu-item index="/login" style="position: absolute; right: 0px"
       >登录</el-menu-item
     >
@@ -34,6 +35,9 @@
       >注册</el-menu-item
     >
 
+    <el-menu-item index="/upload" style="position: absolute; right: 100px"
+      >上传</el-menu-item
+    >
     <!-- <div style="position: absolute; right: 0px">
       <el-dropdown
         class="login-out"

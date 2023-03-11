@@ -3,7 +3,7 @@ import Menu from "./components/Menu.vue";
 </script>
 
 <template>
-  <div class="common-layout">
+  <div class="layout">
     <el-container>
       <el-header><Menu></Menu></el-header>
       <el-main>
@@ -29,4 +29,9 @@ import Menu from "./components/Menu.vue";
   </div> -->
 </template>
 
-<style></style>
+<style>
+.layout {
+  width: 85%;
+  margin: 0 auto;
+}
+</style>

@@ -23,15 +23,15 @@ const routes = [
         component:  () => import('../components/Home.vue'),
     },
     {
-        path: "/menu",
-        name: "Menu",
-        component:  () => import('../components/Menu.vue'),
+        path: "/upload",
+        name: "Upload",
+        component:  () => import('../components/Upload.vue'),
     },
-    {
-        path: "/test",
-        name: "Test",
-        component:  () => import('../components/t.vue'),
-    },
+    // {
+    //     path: "/test",
+    //     name: "Test",
+    //     component:  () => import('../components/t.vue'),
+    // },
 ];
 
 // 导出路由
@@ -39,5 +39,7 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 });
+
+
 
 export default router;

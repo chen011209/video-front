@@ -1,23 +1,19 @@
 <template>
-  <div class="common-layout">
+  <div style="padding: 20px 10px 0 10px">
+    <SakuraBigImgVue />
+  </div>
+
+  <!-- <div class="common-layout">
     <el-container>
       <el-header>Header</el-header>
       <el-main>成功登录</el-main>
       <el-footer>Footer</el-footer>
     </el-container>
-  </div>
+  </div> -->
 </template>
 
 <script setup>
-import Menu from "./Menu.vue";
-
-const a = "20px";
+import SakuraBigImgVue from "./SakuraBigImg.vue";
 </script>
 
-<style>
-.box {
-  width: v-bind(a);
-  height: 100px;
-  background-color: #d22525;
-}
-</style>
+<style></style>
