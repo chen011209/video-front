@@ -1,58 +1,136 @@
 import service from "../util/axios"
-// import fileService from "../util/axios"
 
+export const upload =  (videoPath,picturePath,title,introdcution) => {
+  const formData = new FormData();
 
-export const upload= (file)=>{
-
-    const formData = new FormData();
-    formData.append('file', file);
-    const result =  service.post(
-      "/video/uploadfile",
-      formData,
-      {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-             'token':localStorage.getItem('token'),
-        },
+  formData.append('videoPath', videoPath);
+  formData.append('title', title);
+  formData.append('introduction', introdcution);
+  formData.append('picturePath', picturePath);
+  const result =  service.post(
+    `/video/upload`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'application/json',
       },
-      true
-    );
-
-    return result
-
-
-    // return service.post("/video/uploadfile",{
-    //     file
-    // })
-}
+    },
+    true
+  );
+  return result;
+};
 
 
-// ,{
-//     headers: {'Content-Type': 'multipart/form-data'},
-// }
-
-
-export const requestBatchImport =  (file) => {
+export const uploadFile =  (file) => {
     const formData = new FormData();
     formData.append('file', file);
     const result =  service.post(
       `/video/uploadfile`,
       formData,
-      {
+      true
+    );
+    return result;
+  };
+  
+
+
+  export const getCheckVideoInfo =  (checkVideoId) => {
+    const formData = new FormData();
+
+    const result =  service.get(
+      `/video/check/videoInfo?checkVideoId=` + checkVideoId,
+      formData,
+      true
+    );
+    return result;
+  };
+
+
+  export const getCheckVideoList =  (len) => {
+
+    const formData = new FormData();
+
+    const result =  service.get(
+      `/video/checkVideoList?len=` + len,
+      formData,
+      true
+    );
+    return result;
+  };
+
+
+
+  export const checkVideo =  (checkVideoId,status,remark) => {
+    const formData = new FormData();
+    formData.append("checkVideoId",checkVideoId)
+    formData.append("status",status)
+
+    if(remark!=null){
+      formData.append("remark",remark)
+    }
+
+    const result =  service.post(
+      `/video/check`,
+      formData, {
         headers: {
-            'token':localStorage.getItem('token')
+          'Content-Type': 'application/json',
         },
       },
       true
     );
-    // if (result && result.data?.errcode === 0) {
-    //   onSuccess && onSuccess();
-    // } else if (result.data?.errcode === BATCH_IMPORT_ERR_CODE) {
-    //   onError && onError(result.data.errmsg);
-    // } else {
-    //   httpV1.errorResponse(result);
-    //   // 抛出异常，外部调用时针对其他错误码做loading停止处理
-    //   throw result;
-    // }
+    return result;
   };
-  
+
+
+
+  export const getPoplularVideoList =  (pageNum,pageSize) => {
+
+    const formData = new FormData();
+
+    const result =  service.get(
+      `/video/list/popular?pageSize=${pageSize}&pageNum=${pageNum}`,
+      formData,
+      true
+    );
+    return result;
+  };
+
+
+  export const getVideoInfo =  (videoId) => {
+    const formData = new FormData();
+
+    const result =  service.get(
+      `/video/videoInfo?videoId=` + videoId,
+      formData,
+      true
+    );
+    return result;
+  }
+
+  export const getScore =  (videoId) =>  {
+    const formData = new FormData();
+
+    const result =  service.get(
+      `/video/score?videoId=` + videoId,
+      formData,
+      true
+    );
+    return result;
+  }
+
+  export const setScore =  (videoId,score) => {
+    const formData = new FormData();
+    formData.append("videoId",videoId)
+    formData.append("score",score)
+
+    const result =  service.post(
+      `/video/score`,
+      formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+      true
+    );
+    return result;
+  }

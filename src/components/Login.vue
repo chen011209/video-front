@@ -77,15 +77,12 @@ import { onMounted } from "vue";
 import { reactive, ref } from "vue";
 
 import type { FormInstance, FormRules } from "element-plus";
-import axios from "axios";
 import router from "../router/router.js";
 
 // import { getCurrentInstance } from "vue";
 import Cookies from "js-cookie";
-import service from "../util/axios";
 import { login } from "../services/user.js";
 import { ElMessage } from "element-plus";
-import { main } from "@popperjs/core";
 
 // const proxy = getCurrentInstance()?.proxy!;
 
@@ -142,13 +139,16 @@ const submitForm = (formEl: FormInstance | undefined) => {
 
         if (res.success == true) {
           localStorage.setItem("token", res.data.token);
+          localStorage.setItem("userType", res.data.userType);
 
           ElMessage({
             showClose: true,
             message: "登录成功！",
             type: "success",
           });
-
+          location.reload();
+          location.href = "http://localhost:3000/home";
+          // router.push({ path: "/empty" });
           router.push({ path: "/home" });
         }
       } catch (error) {

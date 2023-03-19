@@ -30,6 +30,7 @@ const service = axios.create({
       // 在开发中，一般还需要单点登录或者其他功能的通用请求头，可以一并配置进来
     },
     post: {
+      'token':localStorage.getItem('token')
       // 'token':localStorage.getItem('token'),
     // 'Access-Control-Allow-Origin': '*'
       // 'Content-Type': 'multipart/form-data'
@@ -97,6 +98,11 @@ service.interceptors.response.use(
 
     // console.debug({response});
     const res = response.data
+
+
+    if(res.pageNum !=null){
+      return res;
+    }
 
     if (!res.success) {
       

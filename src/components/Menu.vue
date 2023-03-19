@@ -13,11 +13,10 @@
     <el-menu-item index="/home" style="font-size: larger; color: #409eff"
       >首页</el-menu-item
     >
-    <el-menu-item index="/movtype/4">动漫</el-menu-item>
-    <el-menu-item index="/movtype/1">电影</el-menu-item>
+    <el-menu-item index="/popularList">热门视频</el-menu-item>
+    <!-- <el-menu-item index="/movtype/1">电影</el-menu-item>
     <el-menu-item index="/movtype/2">电视剧</el-menu-item>
-    <el-menu-item index="/movtype/3">综艺</el-menu-item>
-    <!-- <el-menu-item index="/movtype/5">社区</el-menu-item> -->
+    <el-menu-item index="/movtype/3">综艺</el-menu-item> -->
     <div class="menu-input">
       <el-input
         v-model="input"
@@ -27,181 +26,55 @@
         :suffix-icon="Search"
       />
     </div>
+    <div v-if="isShow">
+      <el-menu-item index="/checklist">审核</el-menu-item>
+    </div>
+    <!-- <el-menu-item index="/movtype/5">社区</el-menu-item> -->
 
-    <el-menu-item index="/login" style="position: absolute; right: 0px"
+    <el-menu-item
+      index="/login"
+      @click="click"
+      style="position: absolute; right: 0px"
+      >登出</el-menu-item
+    >
+
+    <el-menu-item index="/login" style="position: absolute; right: 50px"
       >登录</el-menu-item
     >
-    <el-menu-item index="/register" style="position: absolute; right: 50px"
+    <el-menu-item index="/register" style="position: absolute; right: 100px"
       >注册</el-menu-item
     >
 
-    <el-menu-item index="/upload" style="position: absolute; right: 100px"
+    <el-menu-item index="/upload" style="position: absolute; right: 150px"
       >上传</el-menu-item
     >
-    <!-- <div style="position: absolute; right: 0px">
-      <el-dropdown
-        class="login-out"
-        style="margin: 15px 11px"
-        v-if="isLogining"
-        trigger="click"
-      >
-        <span class="el-dropdown-link">
-          {{ user.name }}
-          <el-icon class="el-icon--right"><arrow-down /></el-icon>
-        </span>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item>
-              <router-link
-                :to="'/personSapce/' + user.id"
-                style="text-decoration: none; color: #606266"
-                >个人空间</router-link
-              >
-            </el-dropdown-item>
-
-            <el-dropdown-item @click="loginOut"> 登出 </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-
-      <el-button
-        link
-        type="primary"
-        class="login"
-        style="margin: 15px 11px; color: black"
-        v-else
-        @click="login"
-      >
-        登录/注册
-      </el-button>
-    </div> -->
   </el-menu>
 </template>
 
 <script>
-// 导航栏
-// import { ref } from "vue";
-// import { Search } from "@element-plus/icons-vue";
-// import { useRouter } from "vue-router";
-// import { useStore } from "vuex";
-// import { localRemove } from "../utils";
-// import { getUserInfo } from "../apis/login";
-// import { ElMessage } from "element-plus";
+import { defineComponent } from "vue";
+import { logOut } from "../services/user.js";
+export default defineComponent({
+  name: "ComponentWithIf",
+  setup() {
+    //如果为管理员显示审核页面
+    const isShow = localStorage.getItem("userType") == 0 ? true : false;
 
-// export default {
-//   name: "SakuraMenu",
-//   setup() {
-//     const store = useStore();
-//     const router = useRouter();
-//     // console.log(router.currentRoute.value)
-//     const activeIndex = ref("/");
-//     // console.log(activeIndex.value)
-//     // console.log(router.currentRoute.value)
-//     const input = ref("");
-//     const isLogining = ref(store.state.appStore.isLogining);
+    async function click() {
+      const res = await logOut();
 
-//     const loginOut = function () {
-//       localRemove("token");
-//       window.location.reload();
-//     };
+      console.log(res);
+      localStorage.clear();
 
-//     const login = function () {
-//       router.push({ name: "login" });
-//     };
-
-//     return {
-//       router,
-//       activeIndex,
-//       input,
-//       store,
-//       isLogining,
-//       loginOut,
-//       login,
-//       Search,
-//     };
-//   },
-
-//   data() {
-//     return {
-//       user: {},
-//     };
-//   },
-
-//   methods: {
-//     handleSelect(key, keyPath) {
-//       // console.log(key)
-//       this.activeIndex = key;
-//       this.input = "";
-//     },
-
-//     // 输入框输入数据时 路由改变
-//     searchChange(value) {
-//       if (this.input) {
-//         this.activeIndex = "/";
-//         this.router.push({ name: "search", query: { keyword: this.input } });
-//       }
-//     },
-
-//     getUserInfo() {
-//       if (this.isLogining) {
-//         // 已登录用户获取用户名
-//         getUserInfo().then((res) => {
-//           // console.log(res.data)
-//           if (res.data.code == 200) {
-//             this.store.state.appStore.user = res.data.data;
-//             this.user = this.store.state.appStore.user;
-//             // console.log(this.user)
-//           } else {
-//             ElMessage({
-//               message: res.data.message,
-//               type: "warning",
-//             });
-//           }
-//         });
-//       }
-//     },
-
-//     ToUserCenter() {
-//       console.log("前往用户中心");
-//       this.router.push({ name: "personSapce" });
-//     },
-//   },
-
-//   mounted() {
-//     this.router
-//       .isReady()
-//       .then(() => {
-//         var currentPath = this.$route.fullPath;
-//         if (currentPath.indexOf("search?keyword=") > -1) {
-//           this.input = this.$route.query.keyword
-//             ? this.$route.query.keyword
-//             : "";
-//         } else if (currentPath.indexOf("/movtype/") > -1) {
-//           this.activeIndex = currentPath;
-//         }
-//       })
-//       .catch(() => {
-//         this.input = "";
-//         this.activeIndex = "/";
-//       });
-//   },
-
-//   created() {
-//     this.getUserInfo();
-//   },
-
-//   watch: {
-//     moniterLogining() {
-//       return this.store.state.appStore.isLogining;
-//     },
-//   },
-
-//   computed: {
-//     moniterLogining() {
-//       this.isLogining = this.store.state.appStore.isLogining;
-//     },
-//   },
-// };
+      location.reload();
+      location.href = "http://localhost:3000/login";
+    }
+    return {
+      isShow,
+      click,
+    };
+  },
+});
 </script>
 
 <style>
@@ -248,7 +121,7 @@ p.login-out:hover {
 
 div.menu-input {
   position: absolute;
-  right: 10%;
-  width: 25%;
+  right: 20%;
+  width: 30%;
 }
 </style>

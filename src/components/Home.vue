@@ -12,8 +12,15 @@
   </div> -->
 </template>
 
-<script setup>
+<script>
 import SakuraBigImgVue from "./SakuraBigImg.vue";
+
+export default {
+  name: "MovieHome",
+  components: {
+    SakuraBigImgVue,
+  },
+};
 </script>
 
 <style></style>
