@@ -1,0 +1,13 @@
+/* ./src/index.css */
+
+/*! @import */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  height: 100%;
+  background-image:url(./assets/pexels-madison-inouye-1831234.jpg);
+  background-attachment: fixed; 
+  background-size: cover;
+}

@@ -22,7 +22,7 @@ import axios from 'axios'
 
 const service = axios.create({
   baseURL: "http://127.0.0.1:8080", // url = base url + request url
-  timeout: 5000, // request timeout
+  timeout: 500000, // request timeout
   headers: {
     get: {
       'token':localStorage.getItem('token')
