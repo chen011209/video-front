@@ -151,7 +151,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
           location.reload();
           location.href = "http://localhost:3000/home";
           // router.push({ path: "/empty" });
-          router.push({ path: "/home" });
+          // router.push({ path: "/home" });
         }
       } catch (error) {
         console.log(error);

@@ -30,7 +30,7 @@
         v-model="search"
         placeholder="Search"
         style="width: 80%; margin-left: 3%"
-        @keyup.enter="searchChange"
+        @keyup.enter="onSearch"
         :suffix-icon="Search"
       />
 
@@ -86,7 +86,7 @@ export default defineComponent({
       location.href = "http://localhost:3000/search?content=" + this.search;
       router.push({ path: "/search", query: { content: this.search } });
 
-      this.search = "";
+      // this.search = "";
     },
   },
   setup() {

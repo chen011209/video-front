@@ -1,7 +1,7 @@
 <template>
-  <div class="flex lg:max-w-4xl max-w-3xl lg:flex-grow main-body">
+  <div class="flex main-body">
     <div
-      style="border: 2px solid black"
+      style="border: 2px solid black; width: 35%"
       class="lg:bg-white lg:w-1/2 lg:p-8 lg:py-16 lg:px-12 space-y-7 marlene-rounded-l-lg shadow-sm w-max p-8 marlene-bg-glass-ex"
     >
       <div class="box">
@@ -87,13 +87,52 @@
         </div>
       </form>
     </div>
+    <div class="myList" style="text-align: center">
+      <p style="font-size: 24px">个人上传视频列表</p>
+
+      <div class="container">
+        <div class="row" style="margin-left: 5px">
+          <div
+            class="col-3"
+            v-for="o in videoList"
+            style="display: inline-block; margin-right: 25px"
+          >
+            <!-- 在这里编写每个div的内容 -->
+            <div style="height: 150px; width: 150px" @click="toVideo(o)">
+              <img
+                :src="o.picturePath"
+                class="card-image"
+                style="width: 100%; height: 100%"
+              />
+              <div>
+                <p v-text="truncatedText(o.videoTitle)"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <el-pagination
+          :page-size="this.pageSize"
+          :pager-count="11"
+          layout="prev, pager, next"
+          :total="this.pageSize * this.pagerCount"
+          v-model:current-page="currentPage"
+          style="position: absolute; bottom: 10px"
+        />
+      </div>
+
+      <!-- 
+      <div style="background-color: red; height: 85%">fs</div> -->
+    </div>
   </div>
 </template>
 
 <script>
 import { UserFilled } from "@element-plus/icons-vue";
 import { getMyInfo, uoloadAvatar, editUser } from "../services/user";
-import { uploadFile } from "../services/video.js";
+import { uploadFile, getMyVideoList } from "../services/video.js";
 export default {
   data() {
     return {
@@ -109,9 +148,46 @@ export default {
       experience: null,
       creTime: null,
       UserFilled,
+
+      pageNum: 1,
+
+      currentPage: 1,
+      pagerCount: 0,
+      pageSize: 12,
+
+      items: [
+        "Item 1",
+        "Item 2",
+        "Item 3",
+        "Item 4",
+        "Item 5",
+        "Item 6",
+        "Item 7",
+        "Item 8",
+      ],
+
+      videoList: [],
+
+      maxLength: 12,
     };
   },
   methods: {
+    toVideo(o) {
+      let routeData = this.$router.resolve({
+        path: "/video",
+        query: { videoId: o.videoId },
+      });
+
+      window.open(routeData.href, "_blank");
+    },
+    truncatedText(text) {
+      if (text.length > this.maxLength) {
+        return text.substring(0, this.maxLength) + "...";
+      } else {
+        return text;
+      }
+    },
+
     formatDate(timestamp) {
       const date = new Date(timestamp);
       const year = date.getFullYear();
@@ -174,6 +250,31 @@ export default {
     },
   },
   async created() {
+    this.$watch("currentPage", async (newValue, oldValue) => {
+      this.currentPage = newValue;
+
+      try {
+        const res = await getMyVideoList(this.currentPage, this.pageSize);
+
+        this.pagerCount = res.pages;
+
+        this.videoList = [];
+
+        if (res.list.length > 0) {
+          for (var i in res.list) {
+            this.videoList.push(res.list[i]);
+          }
+        } else {
+        }
+
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+
+      console.log(`message的值从"${oldValue}"变成了"${newValue}"`);
+    });
+
     try {
       const res = await getMyInfo();
       console.log(res);
@@ -195,6 +296,23 @@ export default {
 
         this.percentage = (this.num / this.max) * 100;
         // this.registrationDate = res.data.registrationDate;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      const res = await getMyVideoList(this.pageNum, this.pageSize);
+
+      this.pagerCount = res.pages;
+
+      console.log(res);
+
+      if (res.list.length > 0) {
+        for (var i in res.list) {
+          this.videoList.push(res.list[i]);
+        }
+      } else {
       }
     } catch (error) {
       console.log(error);
@@ -227,5 +345,41 @@ export default {
   flex-direction: row;
   align-items: center;
   gap: 20px; /* 设置间隔为20像素 */
+}
+
+.myList {
+  border: 2px solid black;
+
+  width: 63%;
+  margin-left: 2%;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+
+.col-3 {
+  flex: 0 0 calc(25% - 30px);
+  max-width: calc(25% - 30px);
+  padding: 0 15px;
+  margin-bottom: 30px;
+}
+
+.item {
+  margin-left: 50px;
+  text-align: center;
+  width: 180px;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
 }
 </style>
