@@ -7,17 +7,18 @@
       <div class="box">
         <el-avatar :icon="UserFilled" v-if="this.avatarPath == null" />
         <el-avatar :src="avatarPath" v-if="this.avatarPath != null" />
-        <el-upload
-          :http-request="uploadPicture"
-          :limit="1"
-          accept="image/*"
-          ref="videoRef"
-          v-model="uploadAvatar"
-          style="display: flex; align-items: center"
+
+        <el-button
+          type="primary"
+          round
+          @click="followUser()"
+          v-if="this.isFollow != true"
+          >关注用户</el-button
         >
-          <el-button slot="trigger">选择头像</el-button>
-        </el-upload>
-        <el-button type="primary" @click="changeAvatar()"> 确认更换 </el-button>
+
+        <el-button type="success" round v-if="this.isFollow == true"
+          >关注成功</el-button
+        >
       </div>
 
       <form class="space-y-8">
@@ -34,21 +35,13 @@
             <el-form-item>
               <div class="flex flex-row">
                 <el-text class="mx-1 label" size="large">姓名:</el-text>
-                <input
-                  type="text"
-                  v-model="this.name"
-                  style="border: 2px solid black"
-                />
+                <input type="text" v-model="this.name" />
               </div>
             </el-form-item>
             <el-form-item>
               <div class="flex flex-row">
                 <el-text class="mx-1 label" size="large">签名:</el-text>
-                <input
-                  type="text"
-                  v-model="this.signature"
-                  style="border: 2px solid black"
-                />
+                <input type="text" v-model="this.signature" />
               </div>
             </el-form-item>
             <el-form-item>
@@ -76,17 +69,9 @@
             </el-form-item>
           </el-form>
         </div>
-        <div class="block text-center">
-          <el-button
-            type="primary"
-            @click="edit()"
-            class="tracking-widest bg-primary min-w-full h-12 focus:bg-secondary hover:bg-secondary text-white rounded-lg text-2xl marlene-btn"
-          >
-            编辑信息
-          </el-button>
-        </div>
       </form>
     </div>
+
     <div class="myList" style="text-align: center">
       <p style="font-size: 24px">个人上传视频列表</p>
       <div v-if="this.isEmpty" style="font-size: 20px">还没有发布视频</div>
@@ -124,18 +109,20 @@
       </div>
 
       <!-- 
-      <div style="background-color: red; height: 85%">fs</div> -->
+        <div style="background-color: red; height: 85%">fs</div> -->
     </div>
   </div>
 </template>
 
 <script>
 import { UserFilled } from "@element-plus/icons-vue";
-import { getMyInfo, uoloadAvatar, editUser } from "../services/user";
-import { uploadFile, getMyVideoList } from "../services/video.js";
+import { getUserInfo, uoloadAvatar, follow } from "../services/user";
+import { uploadFile, getVideoList } from "../services/video.js";
+import { ElMessage } from "element-plus";
 export default {
   data() {
     return {
+      userId: this.$route.query.userId,
       num: 0,
       max: 0,
       percentage: 0,
@@ -155,6 +142,7 @@ export default {
       pagerCount: 0,
       pageSize: 12,
 
+      isFollow: false,
       isEmpty: false,
       videoList: [],
 
@@ -187,6 +175,24 @@ export default {
         day < 10 ? "0" + day : day
       }`;
     },
+    async followUser() {
+      try {
+        const res = await follow(this.userId);
+
+        if (res.success == true) {
+          ElMessage({
+            showClose: true,
+            message: "关注成功",
+            type: "success",
+          });
+          this.isFollow = true;
+        }
+
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async changeAvatar() {
       if (this.uploadAvatar == "") {
         this.$message({
@@ -211,24 +217,6 @@ export default {
 
       console.log(res);
     },
-    async edit() {
-      // 编辑逻辑
-      try {
-        const res = await editUser(this.name, this.signature);
-        console.log(res);
-
-        if (res.success == true) {
-          this.$message({
-            message: "编辑成功",
-            type: "success",
-          });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-
-      console.log("edit");
-    },
     async uploadPicture(options) {
       const res = await uploadFile(options.file);
 
@@ -240,11 +228,16 @@ export default {
     },
   },
   async created() {
+    console.log(this.userId);
     this.$watch("currentPage", async (newValue, oldValue) => {
       this.currentPage = newValue;
 
       try {
-        const res = await getMyVideoList(this.currentPage, this.pageSize);
+        const res = await getVideoList(
+          this.currentPage,
+          this.pageSize,
+          this.userId
+        );
 
         this.pagerCount = res.pages;
 
@@ -268,7 +261,7 @@ export default {
     });
 
     try {
-      const res = await getMyInfo();
+      const res = await getUserInfo(this.userId);
       console.log(res);
 
       if (res.success == true) {
@@ -278,6 +271,7 @@ export default {
         this.experience = res.data.userLevelPoints;
         this.mail = res.data.userEmail;
         this.creTime = res.data.creTime;
+        this.isFollow = res.data.isFollow;
 
         this.avatarPath = res.data.avatarPath;
         // this.avatarPath =
@@ -294,7 +288,7 @@ export default {
     }
 
     try {
-      const res = await getMyVideoList(this.pageNum, this.pageSize);
+      const res = await getVideoList(this.pageNum, this.pageSize, this.userId);
 
       this.pagerCount = res.pages;
 

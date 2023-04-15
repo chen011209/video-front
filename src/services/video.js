@@ -244,3 +244,19 @@ export const uploadFile =  (file) => {
     );
     return result;
   }
+
+  
+  export const getVideoList =  (pageNum,pageSize,userId) => {
+    const formData = new FormData();
+
+    const result =  service.get(
+      `/video/list?pageSize=${pageSize}&pageNum=${pageNum}&userId=${userId}`,
+      formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+      true
+    );
+    return result;
+  }

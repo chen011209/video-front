@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .parent {
   position: relative;
   height: 200px;

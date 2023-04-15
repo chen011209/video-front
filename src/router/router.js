@@ -74,6 +74,16 @@ const routes = [
         name: "Search",
         component:  () => import('../components/Search.vue'),
     },
+    {
+        path: "/userInfo",
+        name: "UserInfo",
+        component:  () => import('../components/UserInfo.vue'),
+    },
+    {
+        path: "/follow",
+        name: "FollowList",
+        component:  () => import('../components/FollowList.vue'),
+    },
 ];
 
 // 导出路由

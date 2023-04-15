@@ -67,14 +67,34 @@
     <div class="right-container">
       <div class="user">
         <div>
-          <el-avatar :icon="UserFilled" v-if="this.avatarPath == null" />
-          <el-avatar :src="avatarPath" v-if="this.avatarPath != null" />
+          <el-avatar
+            :icon="UserFilled"
+            v-if="this.avatarPath == null"
+            @click="userInfoPage(this.userId)"
+          />
+          <el-avatar
+            :src="avatarPath"
+            v-if="this.avatarPath != null"
+            @click="userInfoPage(this.userId)"
+          />
 
           <div v-if="this.avatarPath == null" style="display: inline-block">
             <el-text class="mx-1">{{ userName }}</el-text>
 
             <el-text class="mx-1 label" size="large">等级:</el-text>
             <el-text class="mx-1 label" size="large">{{ userLevel }}</el-text>
+
+            <el-button
+              type="primary"
+              round
+              @click="follow()"
+              v-if="this.isFollow != true"
+              >关注用户</el-button
+            >
+
+            <el-button type="success" round v-if="this.isFollow == true"
+              >关注成功</el-button
+            >
           </div>
 
           <div
@@ -85,6 +105,18 @@
 
             <el-text class="mx-1 label" size="large">等级:</el-text>
             <el-text class="mx-1 label" size="large">{{ userLevel }}</el-text>
+
+            <el-button
+              type="primary"
+              round
+              @click="follow()"
+              v-if="this.isFollow != true"
+              >关注用户</el-button
+            >
+
+            <el-button type="success" round v-if="this.isFollow == true"
+              >关注成功</el-button
+            >
           </div>
 
           <div>
@@ -148,8 +180,16 @@
         <div class="flex-container">
           <div style="width: 12%">
             <div>
-              <el-avatar :icon="UserFilled" v-if="o.avatarPath == null" />
-              <el-avatar :src="o.avatarPath" v-if="o.avatarPath != null" />
+              <el-avatar
+                :icon="UserFilled"
+                v-if="o.avatarPath == null"
+                @click="userInfoPage(o.userId)"
+              />
+              <el-avatar
+                :src="o.avatarPath"
+                v-if="o.avatarPath != null"
+                @click="userInfoPage(o.userId)"
+              />
               <!-- <el-avatar :icon="UserFilled" /> -->
             </div>
             {{ o.userName }}
@@ -214,11 +254,12 @@ import {
   getUserVideoInfo,
 } from "../services/video.js";
 import { getCommenList, addComment } from "../services/comment.js";
-import { getUserInfo } from "../services/user.js";
+import { getUserInfo, follow } from "../services/user.js";
 import { getRecommendList } from "../services/video.js";
 import { likeComment } from "../services/comment.js";
 import { ElMessage } from "element-plus";
 import { UserFilled } from "@element-plus/icons-vue";
+import router from "../router/router.js";
 export default {
   async mounted() {},
 
@@ -238,6 +279,7 @@ export default {
       userId: null,
       userName: null,
       releaseTime: null,
+      isFollow: false,
 
       avatarPath: null,
       signature: null,
@@ -290,6 +332,33 @@ export default {
         .padStart(2, "0")} ${hour.toString().padStart(2, "0")}:${minute
         .toString()
         .padStart(2, "0")}`;
+    },
+    userInfoPage(userId) {
+      console.log("userInfoPage");
+      location.reload();
+      location.href = "http://localhost:3000/userInfo?userId=" + userId;
+      // router.push({
+      //   path: "/userInfo",
+      //   query: { userId: userId },
+      // });
+    },
+    async follow() {
+      try {
+        const res = await follow(this.userId);
+
+        if (res.success == true) {
+          ElMessage({
+            showClose: true,
+            message: "关注成功",
+            type: "success",
+          });
+          this.isFollow = true;
+        }
+
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
     },
     async collect() {
       try {
@@ -463,18 +532,6 @@ export default {
       console.log(error);
     }
 
-    // try {
-    //   const res = await getScore(this.videoId);
-
-    //   if (res.data.score != null) {
-    //     this.value2 = res.data.score;
-    //   }
-
-    //   console.log(res.data);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
     try {
       const res = await getUserInfo(this.userId);
       this.userName = res.data.userName;
@@ -482,6 +539,7 @@ export default {
       this.signature = res.data.signature;
       this.userLevel = res.data.userLevel;
       this.userLevelPoints = res.data.userLevelPoints;
+      this.isFollow = res.data.isFollow;
 
       this.num = res.data.userLevelPoints;
       this.max = res.data.maxLevelPoints;

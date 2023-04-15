@@ -150,7 +150,7 @@ export default {
 
       try {
         const res = await getSearchList(
-          this.pageNum,
+          this.currentPage,
           this.pageSize,
           this.content
         );

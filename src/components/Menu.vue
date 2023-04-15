@@ -16,25 +16,28 @@
     <el-menu-item index="/popularList">热门视频</el-menu-item>
 
     <el-menu-item index="/upload">上传</el-menu-item>
+
+    <el-menu-item index="/follow">关注</el-menu-item>
+
     <el-menu-item index="/collect">收藏</el-menu-item>
 
     <el-menu-item index="/history">历史</el-menu-item>
 
     <el-menu-item v-if="isShow" index="/checklist">审核</el-menu-item>
 
-    <!-- <el-menu-item index="/movtype/1">电影</el-menu-item>
-    <el-menu-item index="/movtype/2">电视剧</el-menu-item>
-    <el-menu-item index="/movtype/3">综艺</el-menu-item> -->
-    <div class="menu-input">
+    <div class="menu-input" style="width: 350px">
       <el-input
         v-model="search"
         placeholder="Search"
-        style="width: 80%; margin-left: 3%"
+        style="margin-left: 20%; width: 60%; margin-top: 5%"
         @keyup.enter="onSearch"
-        :suffix-icon="Search"
       />
 
-      <el-button @click="onSearch()">搜索</el-button>
+      <el-button
+        style="display: inline-block; margin-top: 5%"
+        @click="onSearch()"
+        >搜索</el-button
+      >
     </div>
 
     <!-- <el-menu-item index="/movtype/5">社区</el-menu-item> -->
@@ -111,14 +114,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.flex-grow {
-  flex-grow: 1;
-}
-
 /* 取消过渡效果 */
-.el-menu-item {
-  border-bottom: 0 !important;
-}
 
 .el-menu-item.is-active {
   background-color: white !important;
@@ -133,28 +129,9 @@ export default defineComponent({
   background-color: white !important;
   color: #24b8f2 !important;
 }
-
-/* .el-button.login:hover {
-  color: #24b8f2
-}
-
-p.login-out:hover {
-  color: #24b8f2
-} */
-
 .el-menu {
   border: none !important;
   height: 100%;
   position: relative;
-}
-
-.el-input {
-  margin: 10px 0px;
-}
-
-div.menu-input {
-  position: absolute;
-  right: 20%;
-  width: 30%;
 }
 </style>

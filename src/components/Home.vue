@@ -18,7 +18,7 @@
           v-for="o in popularList"
           :key="o"
           class="text item"
-          style="width: 500px"
+          style="width: 550px"
           @click="popularToVideo(o)"
         >
           {{ o.videoTitle }}

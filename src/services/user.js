@@ -110,6 +110,8 @@ export const getMyInfo= ()=>{
 }
 
 
+
+
 export const getUserInfo= (userId)=>{
 
   const formData = new FormData();
@@ -193,3 +195,33 @@ export const getMailCode= (email)=>{
 
 
 
+export const follow= (userId)=>{
+
+  const formData = new FormData();
+  
+  const result =  service.post(
+    "/user/follow/" + userId,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+    true
+  );
+
+  return result
+
+}
+
+export const getFollowList =  (pageNum,pageSize) => {
+
+  const formData = new FormData();
+
+  const result =  service.get(
+    `/user/follow?pageSize=${pageSize}&pageNum=${pageNum}`,
+    formData,
+    true
+  );
+  return result;
+};
